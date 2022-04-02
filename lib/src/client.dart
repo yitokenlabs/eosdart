@@ -24,6 +24,8 @@ class EOSClient {
   final String _version;
   late int expirationInSec;
   late int httpTimeout;
+  final String prefix;
+
   Map<String, ecc.EOSPrivateKey> keys = Map();
 
   /// Converts abi files between binary and structured form (`abi.abi.json`) */
@@ -37,6 +39,7 @@ class EOSClient {
     this.expirationInSec = 180,
     List<String> privateKeys = const [],
     this.httpTimeout = 10,
+    this.prefix = 'EOS'
   }) {
     _mapKeys(privateKeys);
 
@@ -50,7 +53,7 @@ class EOSClient {
   void _mapKeys(List<String> privateKeys) {
     for (String privateKey in privateKeys) {
       ecc.EOSPrivateKey pKey = ecc.EOSPrivateKey.fromString(privateKey);
-      String publicKey = pKey.toEOSPublicKey().toString();
+      String publicKey = pKey.toEOSPublicKey().toString().replaceFirst('EOS', prefix);
       keys[publicKey] = pKey;
     }
   }
